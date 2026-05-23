@@ -1,0 +1,189 @@
+/* =============================================
+   Design tokens
+   ============================================= */
+:root {
+  --bg:           #fff8f0;
+  --text:         #5c4033;
+  --board-border: rgba(92, 64, 51, 0.18);
+  --btn-bg:       #ffdab9;
+  --btn-hover:    #ffcba4;
+  --shadow:       rgba(92, 64, 51, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg:           #3e2723;
+    --text:         #fff0e6;
+    --board-border: rgba(255, 220, 180, 0.12);
+    --btn-bg:       #cc8b5e;
+    --btn-hover:    #b87346;
+    --shadow:       rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* =============================================
+   Reset & base
+   ============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Outfit', 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-x: hidden;
+  transition: background 0.3s, color 0.3s;
+}
+
+button { font-family: inherit; cursor: pointer; border: none; }
+
+/* =============================================
+   App layout
+   ============================================= */
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 2rem 1rem 3rem;
+  text-align: center;
+  width: 100%;
+  position: relative;
+}
+
+/* =============================================
+   Header
+   ============================================= */
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+h1 {
+  font-size: 2.6rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+
+header p {
+  font-size: 1rem;
+  opacity: 0.72;
+  max-width: 340px;
+}
+
+.reset-btn {
+  margin-top: 0.25rem;
+  background: transparent;
+  border: 2px solid var(--text);
+  color: var(--text);
+  padding: 0.45rem 1.3rem;
+  border-radius: 99px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  opacity: 0.6;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.reset-btn:hover { opacity: 1; background: rgba(128, 80, 40, 0.08); }
+
+/* =============================================
+   Phaser canvas container
+   ============================================= */
+#game-container canvas {
+  display: block;
+  border-radius: 14px;
+  box-shadow: 0 10px 40px var(--shadow);
+}
+
+/* =============================================
+   Win overlay
+   ============================================= */
+.win-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(8px);
+  z-index: 999;
+  animation: fadeIn 0.35s ease-out;
+}
+
+.win-overlay.hidden { display: none; }
+
+.win-modal {
+  background: var(--bg);
+  padding: 2.5rem 3.5rem;
+  border-radius: 24px;
+  text-align: center;
+  box-shadow: 0 16px 64px var(--shadow);
+  border: 2px solid var(--board-border);
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.win-emoji { font-size: 3.5rem; margin-bottom: 0.4rem; }
+
+.win-modal h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+}
+
+.action-btn {
+  background: var(--btn-bg);
+  color: var(--text);
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 0.8rem 2.2rem;
+  border-radius: 99px;
+  transition: transform 0.2s, background 0.2s;
+  box-shadow: 0 4px 14px var(--shadow);
+}
+
+.action-btn:hover { background: var(--btn-hover); transform: scale(1.06); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes popIn {
+  from { transform: scale(0.82); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+/* =============================================
+   Footer
+   ============================================= */
+.game-footer {
+  margin-top: 1.5rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  opacity: 0.65;
+  transition: opacity 0.2s;
+}
+
+.game-footer:hover {
+  opacity: 0.95;
+}
+
+.game-footer a {
+  color: var(--text);
+  font-weight: 700;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--text);
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.game-footer a:hover {
+  border-bottom-style: solid;
+}
+
+.footer-note {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-top: 0.25rem;
+}
