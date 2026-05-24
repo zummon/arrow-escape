@@ -1,39 +1,42 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Arrow Escape</title>
-    <meta name="description" content="A puzzle game where you slide arrow-snakes off the board one step at a time." />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/src/app.css" />
-  </head>
-  <body>
-    <main id="app">
-      <header>
-        <h1>Arrow Escape</h1>
-        <p>Click a snake — its head must have a clear path to the edge.</p>
-        <button id="reset-btn" class="reset-btn">↺ Reset</button>
-      </header>
+<html>
 
-      <div id="game-container"></div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arrow Escape</title>
+  <meta name="description" content="A puzzle game where you slide arrow-snakes off the board one step at a time." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/app.css" />
+</head>
 
-      <footer class="game-footer">
-        <p>Made by Ai, <a target="_blank" href="https://github.com/zummon">Teerapat Anantarattanachai</a></p>
-        <p class="footer-note">Something breaks, needs upgrade. Let me know</p>
-      </footer>
+<body>
+  <main id="app">
+    <header>
+      <h1>Arrow Escape</h1>
+      <p>Click a snake — its head must have a clear path to the edge.</p>
+      <button id="reset-btn" class="reset-btn">↺ Reset</button>
+    </header>
 
-      <!-- Win overlay (hidden by default, shown by Phaser scene event) -->
-      <div id="win-overlay" class="win-overlay hidden">
-        <div class="win-modal">
-          <div class="win-emoji">🎉</div>
-          <h2>Board Cleared!</h2>
-          <button id="play-again-btn" class="action-btn">Play Again</button>
-        </div>
+    <div id="game-container"></div>
+
+    <footer class="game-footer">
+      <p>Made by Ai, <a target="_blank" href="https://github.com/zummon">Teerapat Anantarattanachai</a></p>
+      <p class="footer-note">Something breaks, needs upgrade. Let me know</p>
+    </footer>
+
+    <!-- Win overlay (hidden by default, shown by Phaser scene event) -->
+    <div id="win-overlay" class="win-overlay hidden">
+      <div class="win-modal">
+        <div class="win-emoji">🎉</div>
+        <h2>Board Cleared!</h2>
+        <button id="play-again-btn" class="action-btn">Play Again</button>
       </div>
-    </main>
+    </div>
+  </main>
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>
