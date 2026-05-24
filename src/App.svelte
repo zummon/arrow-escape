@@ -24,83 +24,70 @@
 </main>
 
 <style>
-  :global(:root) {
-    --board-bg: #fff8f0;
-    --text-color: #4a3728;
-    --bg-color: #f7ebe1;
-  }
-
-  :global(body) {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    font-family:
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-
   .app-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    padding: 1.5rem 1rem;
+    gap: 1.2rem;
+    padding: 2.5rem 1rem;
     text-align: center;
     width: 100%;
-    box-sizing: border-box;
   }
 
   header {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    gap: 0.4rem;
   }
 
   h1 {
-    font-size: 2.2rem;
-    font-weight: 800;
+    font-size: 2.6rem;
+    font-weight: 700;
     margin: 0;
+    color: var(--text-color);
     letter-spacing: -0.5px;
+    filter: drop-shadow(0 2px 0px var(--board-bg));
   }
 
   p {
-    font-size: 0.95rem;
-    opacity: 0.8;
+    font-size: 1.05rem;
+    color: var(--text-muted);
     max-width: 360px;
     margin: 0;
   }
 
   .reset-btn {
     margin-top: 0.5rem;
-    background: transparent;
-    border: 2px solid var(--text-color);
+    background: var(--btn-bg);
+    border: none;
     color: var(--text-color);
-    padding: 0.45rem 1.2rem;
-    border-radius: 99px;
-    font-weight: 600;
-    font-size: 0.9rem;
+    padding: 0.6rem 1.4rem;
+    border-radius: 20px; /* Super rounded pill shape */
+    font-family: var(--font-cute);
+    font-weight: 700;
+    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s;
+    box-shadow: 0 4px 0 var(--text-color); /* Cute sticker/comic thick shadow */
+    transition:
+      transform 0.1s ease,
+      box-shadow 0.1s ease;
   }
 
   .reset-btn:hover {
-    background: var(--text-color);
-    color: var(--bg-color);
+    background: var(--btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--text-color);
+  }
+
+  .reset-btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--text-color);
   }
 
   .game-area {
     display: flex;
     justify-content: center;
-    width: 100%;
-    overflow: auto; /* Adds touch scroll on smaller mobile breakpoints */
-    padding: 10px;
-    box-sizing: border-box;
+    margin-top: 1rem;
   }
 </style>

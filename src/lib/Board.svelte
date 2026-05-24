@@ -130,26 +130,24 @@
         <circle
           cx={CELL / 2}
           cy={CELL / 2}
-          r={Math.max(1, CELL * 0.05)}
-          fill="rgba(128,100,80,0.2)"
+          r="3"
+          fill="var(--text-color)"
+          opacity="0.1"
         />
       </pattern>
     </defs>
 
+    <rect width={SVG_W} height={SVG_H} rx="24" fill="var(--board-bg)" />
+    <rect width={SVG_W} height={SVG_H} rx="24" fill="url(#grid-dots)" />
+
     <rect
       width={SVG_W}
       height={SVG_H}
-      rx="12"
-      fill="var(--board-bg, #fff8f0)"
-    />
-    <rect width={SVG_W} height={SVG_H} rx="12" fill="url(#grid-dots)" />
-    <rect
-      width={SVG_W}
-      height={SVG_H}
-      rx="12"
+      rx="24"
       fill="none"
-      stroke="rgba(128,100,80,0.25)"
-      stroke-width="3"
+      stroke="var(--text-color)"
+      stroke-width="4"
+      opacity="0.15"
     />
 
     {#each slithering as s (s.id)}
@@ -188,73 +186,75 @@
   .board-wrap {
     position: relative;
     display: inline-block;
-    max-width: 100%;
-    margin: 0 auto;
   }
 
   .board-svg {
     display: block;
-    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.15));
-    max-width: 100%;
-    height: auto;
+    /* Soft pillowy shadow drop */
+    filter: drop-shadow(0 12px 36px var(--tile-shadow));
   }
 
+  /* Bubbly Modal Blur Overlays */
   .win-overlay {
     position: absolute;
     inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(4px);
-    border-radius: 12px;
+    background: rgba(35, 25, 36, 0.4);
+    backdrop-filter: blur(8px);
+    border-radius: 24px;
     animation: fadeIn 0.3s ease-out forwards;
   }
 
   .win-modal {
-    background: #ffffff;
-    padding: 2rem;
-    border-radius: 16px;
+    background: var(--modal-bg);
+    padding: 2.5rem 3rem;
+    border-radius: 28px;
     text-align: center;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-
-  :global(body.dark) .win-modal {
-    background: #2b1b17;
-    color: #fff;
-    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+    border: 4px solid var(--text-color); /* Bold cute frame */
+    animation: popSquish 0.45s cubic-bezier(0.175, 0.885, 0.42, 1.4);
   }
 
   .win-emoji {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
+    font-size: 3.5rem;
+    margin-bottom: 0.25rem;
+    animation: bounce 1.2s infinite alternate ease-in-out;
   }
 
   .win-modal h2 {
-    font-size: 1.75rem;
-    font-weight: 800;
-    margin-bottom: 1.25rem;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
   }
 
   .play-again-btn {
-    background: #ee5a24;
-    color: white;
-    font-size: 1rem;
+    background: var(--btn-bg);
+    color: var(--text-color);
+    font-family: var(--font-cute);
+    font-size: 1.15rem;
     font-weight: 700;
-    padding: 0.65rem 1.75rem;
-    border-radius: 99px;
+    padding: 0.8rem 2.2rem;
+    border-radius: 24px;
     border: none;
     cursor: pointer;
+    box-shadow: 0 5px 0 var(--text-color);
     transition:
-      transform 0.2s,
-      background 0.2s;
+      transform 0.1s ease,
+      box-shadow 0.1s ease;
   }
 
   .play-again-btn:hover {
-    transform: scale(1.05);
-    background: #ff6b6b;
+    background: var(--btn-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 7px 0 var(--text-color);
+  }
+
+  .play-again-btn:active {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 var(--text-color);
   }
 
   @keyframes fadeIn {
@@ -266,14 +266,27 @@
     }
   }
 
-  @keyframes popIn {
-    from {
-      transform: scale(0.85);
+  /* Playful squash-and-stretch popping animation */
+  @keyframes popSquish {
+    0% {
+      transform: scale(0.7) rotate(-3deg);
       opacity: 0;
     }
-    to {
-      transform: scale(1);
+    60% {
+      transform: scale(1.05) rotate(2deg);
+    }
+    100% {
+      transform: scale(1) rotate(0deg);
       opacity: 1;
+    }
+  }
+
+  @keyframes bounce {
+    from {
+      transform: translateY(0) scale(1);
+    }
+    to {
+      transform: translateY(-8px) scale(1.05);
     }
   }
 </style>

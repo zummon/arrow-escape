@@ -1,44 +1,58 @@
-/* =============================================
-   Design tokens
-   ============================================= */
 :root {
-  --bg:           #fff8f0;
-  --text:         #5c4033;
-  --board-border: rgba(92, 64, 51, 0.18);
-  --btn-bg:       #ffdab9;
-  --btn-hover:    #ffcba4;
-  --shadow:       rgba(92, 64, 51, 0.18);
+  /* --- Light Theme (Warm Café / Peach Palette) --- */
+  --bg-color: #fcf6f0;
+  /* Warm milk/cream */
+  --board-bg: #f3e9dc;
+  /* Soft toasted almond toast */
+  --text-color: #5c3d2e;
+  /* Cozy deep chocolate brown */
+  --text-muted: #8c6a5c;
+  /* Muted cocoa */
+  --btn-bg: #ffb5a7;
+  /* Soft pastel peach */
+  --btn-hover: #fcd5ce;
+  /* Creamy pastel pink */
+  --tile-shadow: rgba(92, 61, 46, 0.12);
+  --modal-bg: #ffffff;
+  --font-cute: 'Fredoka', system-ui, -apple-system, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:           #3e2723;
-    --text:         #fff0e6;
-    --board-border: rgba(255, 220, 180, 0.12);
-    --btn-bg:       #cc8b5e;
-    --btn-hover:    #b87346;
-    --shadow:       rgba(0, 0, 0, 0.45);
+    /* --- Dark Theme (Cozy Starry Night Palette) --- */
+    --bg-color: #231924;
+    /* Deep warm grape/night sky */
+    --board-bg: #322435;
+    /* Dark warm plum board */
+    --text-color: #f7ebe1;
+    /* Sweet cream milk text */
+    --text-muted: #bda3be;
+    /* Muted lavender-grey */
+    --btn-bg: #e56b6f;
+    /* Soft strawberry red */
+    --btn-hover: #ea8c8f;
+    /* Lighter warm strawberry */
+    --tile-shadow: rgba(0, 0, 0, 0.3);
+    --modal-bg: #3d2c41;
+    /* Elevated dark plum modal */
   }
 }
 
-/* =============================================
-   Reset & base
-   ============================================= */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+html,
 body {
-  font-family: 'Outfit', 'Segoe UI', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  overflow-x: hidden;
-  transition: background 0.3s, color 0.3s;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-cute);
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-button { font-family: inherit; cursor: pointer; border: none; }
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+}
 
 /* =============================================
    App layout
@@ -90,7 +104,10 @@ header p {
   transition: opacity 0.2s, background 0.2s;
 }
 
-.reset-btn:hover { opacity: 1; background: rgba(128, 80, 40, 0.08); }
+.reset-btn:hover {
+  opacity: 1;
+  background: rgba(128, 80, 40, 0.08);
+}
 
 /* =============================================
    Phaser canvas container
@@ -116,7 +133,9 @@ header p {
   animation: fadeIn 0.35s ease-out;
 }
 
-.win-overlay.hidden { display: none; }
+.win-overlay.hidden {
+  display: none;
+}
 
 .win-modal {
   background: var(--bg);
@@ -128,7 +147,10 @@ header p {
   animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.win-emoji { font-size: 3.5rem; margin-bottom: 0.4rem; }
+.win-emoji {
+  font-size: 3.5rem;
+  margin-bottom: 0.4rem;
+}
 
 .win-modal h2 {
   font-size: 2.2rem;
@@ -147,12 +169,31 @@ header p {
   box-shadow: 0 4px 14px var(--shadow);
 }
 
-.action-btn:hover { background: var(--btn-hover); transform: scale(1.06); }
+.action-btn:hover {
+  background: var(--btn-hover);
+  transform: scale(1.06);
+}
 
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 @keyframes popIn {
-  from { transform: scale(0.82); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
+  from {
+    transform: scale(0.82);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* =============================================
