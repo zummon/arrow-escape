@@ -1,163 +1,51 @@
 <script>
   import "./app.css";
+  import { pickShape } from "./lib/shapes.js";
+  import { generateBoard } from "./lib/generator.js";
 
-  // ── Grid & puzzle constants (from levels.js) ───────────────────────────────
-  const GRID_SIZE = 25;
-  const NUM_SNAKES = 75;
-  const CELL_SIZE = 24; // Compact size so it scales nicely inside viewports
-  const PAD_CELLS = 2;
+  const CELL = 24;
+  const BLOCK = CELL * 2;
+  const STEP_MS = 75;
 
-  const MIN_LEN = 3;
-  const MAX_LEN = 7;
+  let board = $state(generateBoard(pickShape()));
+  let snakes = $state(board.snakes.map(cloneSnake));
+  let slithering = $state([]);
+  let blockedIds = $state(new Set());
+  let won = $state(false);
 
-  const COLORS = [
-    '#FF6B6B', '#FF9F43', '#FECA57', '#48DBFB', '#54A0FF',
-    '#5F27CD', '#C4B5FD', '#FF9FF3', '#00D2D3', '#01ABC1',
-    '#10AC84', '#EE5A24', '#FD79A8', '#6C5CE7', '#FDCB6E',
-    '#55EFC4', '#A29BFE', '#FD7272', '#FAB1A0', '#81ECEC',
-  ];
+  const svgW = $derived(board.cols * CELL);
+  const svgH = $derived(board.rows * CELL);
+  const boardPath = $derived(
+    board.blocks
+      .map(([R, C]) => `M${C * BLOCK} ${R * BLOCK}h${BLOCK}v${BLOCK}h${-BLOCK}Z`)
+      .join(""),
+  );
 
-  function dirToName(dr, dc) {
-    if (dr === -1) return 'Up';
-    if (dr === 1) return 'Down';
-    if (dc === -1) return 'Left';
-    if (dc === 1) return 'Right';
-    return 'Right';
+  function cloneSnake(s) {
+    return { ...s, segments: s.segments.map((seg) => [...seg]) };
   }
 
-  function shuffle(arr) {
-    const a = [...arr];
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
+  function newGame() {
+    board = generateBoard(pickShape(board.shapeName));
+    snakes = board.snakes.map(cloneSnake);
+    slithering = [];
+    blockedIds = new Set();
+    won = false;
   }
 
-  function generateSnakes(gridSize = GRID_SIZE, numSnakes = NUM_SNAKES) {
-    const occupied = new Set();
-    const snakes = [];
-
-    for (let id = 1; id <= numSnakes; id++) {
-      let placed = false;
-      for (let attempt = 0; attempt < 1000 && !placed; attempt++) {
-        const len = MIN_LEN + Math.floor(Math.random() * (MAX_LEN - MIN_LEN + 1));
-        const segs = _buildPath(gridSize, occupied, len);
-        if (!segs) continue;
-
-        const head = segs[segs.length - 1];
-        const prev = segs[segs.length - 2];
-        const dr = head[0] - prev[0];
-        const dc = head[1] - prev[1];
-        const direction = dirToName(dr, dc);
-
-        let selfIntersects = false;
-        const bodySet = new Set(segs.slice(0, -1).map(([r, c]) => `${r},${c}`));
-        let r = head[0] + dr, c = head[1] + dc;
-        while (r >= 0 && r < gridSize && c >= 0 && c < gridSize) {
-          if (bodySet.has(`${r},${c}`)) {
-            selfIntersects = true;
-            break;
-          }
-          r += dr;
-          c += dc;
-        }
-        if (selfIntersects) continue;
-
-        let pathBlocked = false;
-        r = head[0] + dr;
-        c = head[1] + dc;
-        while (r >= 0 && r < gridSize && c >= 0 && c < gridSize) {
-          if (occupied.has(`${r},${c}`)) {
-            pathBlocked = true;
-            break;
-          }
-          r += dr;
-          c += dc;
-        }
-        if (pathBlocked) continue;
-
-        const snake = {
-          id,
-          color: COLORS[(id - 1) % COLORS.length],
-          segments: segs,
-          direction,
-        };
-
-        segs.forEach(([r, c]) => occupied.add(`${r},${c}`));
-        snakes.push(snake);
-        placed = true;
-      }
-    }
-    return snakes;
-  }
-
-  function _buildPath(gridSize, occupied, targetLen) {
-    const VECS = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-
-    for (let attempt = 0; attempt < 150; attempt++) {
-      const r0 = Math.floor(Math.random() * gridSize);
-      const c0 = Math.floor(Math.random() * gridSize);
-      if (occupied.has(`${r0},${c0}`)) continue;
-
-      const segs = [[r0, c0]];
-      const cellSet = new Set([`${r0},${c0}`]);
-      let prevDr = null, prevDc = null;
-
-      while (segs.length < targetLen) {
-        const [lr, lc] = segs[segs.length - 1];
-
-        let dirs = shuffle(VECS);
-        if (prevDr !== null && Math.random() < 0.65) {
-          const si = dirs.findIndex(([dr, dc]) => dr === prevDr && dc === prevDc);
-          if (si > -1) {
-            const [straight] = dirs.splice(si, 1);
-            dirs.push(straight);
-          }
-        }
-
-        let extended = false;
-        for (const [dr, dc] of dirs) {
-          const nr = lr + dr, nc = lc + dc;
-          const key = `${nr},${nc}`;
-          if (
-            nr >= 0 && nr < gridSize &&
-            nc >= 0 && nc < gridSize &&
-            !occupied.has(key) &&
-            !cellSet.has(key)
-          ) {
-            segs.push([nr, nc]);
-            cellSet.add(key);
-            prevDr = dr; prevDc = dc;
-            extended = true;
-            break;
-          }
-        }
-        if (!extended) break;
-      }
-      if (segs.length >= 3) return segs;
-    }
-    return null;
-  }
-
-  let initialSnakes = generateSnakes(GRID_SIZE, NUM_SNAKES);
-
-  // ── Game logic helpers (from gameLogic.js) ─────────────────────────────────
   function dirToVec(direction) {
-    if (direction === 'Up')    return [-1,  0];
-    if (direction === 'Down')  return [ 1,  0];
-    if (direction === 'Left')  return [ 0, -1];
-    if (direction === 'Right') return [ 0,  1];
-    return [0, 0];
+    if (direction === "Up") return [-1, 0];
+    if (direction === "Down") return [1, 0];
+    if (direction === "Left") return [0, -1];
+    return [0, 1];
   }
 
-  function checkEscape(snake, allSnakes, size) {
-    const { segments, direction } = snake;
-    const [hr, hc] = segments[segments.length - 1];
-    const [dr, dc] = dirToVec(direction);
+  function checkEscape(snake) {
+    const [hr, hc] = snake.segments[snake.segments.length - 1];
+    const [dr, dc] = dirToVec(snake.direction);
 
     const blocked = new Set();
-    for (const other of allSnakes) {
+    for (const other of snakes) {
       if (other.id === snake.id) continue;
       for (const [r, c] of other.segments) {
         blocked.add(`${r},${c}`);
@@ -165,31 +53,13 @@
     }
 
     let r = hr + dr, c = hc + dc;
-    while (r >= 0 && r < size && c >= 0 && c < size) {
+    while (r >= 0 && r < board.rows && c >= 0 && c < board.cols) {
       if (blocked.has(`${r},${c}`)) return false;
       r += dr;
       c += dc;
     }
     return true;
   }
-
-  // ── Board reactive state & handlers (from Board.svelte) ──────────────────────
-  const CELL = CELL_SIZE;
-  const STEP_MS = 75;
-  const SVG_W = GRID_SIZE * CELL;
-  const SVG_H = GRID_SIZE * CELL;
-
-  function cloneSnakes(src) {
-    return src.map((s) => ({
-      ...s,
-      segments: s.segments.map((seg) => [...seg]),
-    }));
-  }
-
-  let snakes = $state(cloneSnakes(initialSnakes));
-  let slithering = $state([]);
-  let blockedIds = $state(new Set());
-  let won = $state(false);
 
   function markBlocked(id) {
     blockedIds = new Set([...blockedIds, id]);
@@ -210,13 +80,13 @@
     if (slithering.find((s) => s.id === snake.id)) return;
     if (blockedIds.has(snake.id)) return;
 
-    if (!checkEscape(snake, snakes, GRID_SIZE)) {
+    if (!checkEscape(snake)) {
       markBlocked(snake.id);
       return;
     }
 
     snakes = snakes.filter((s) => s.id !== snake.id);
-    const copy = { ...snake, segments: snake.segments.map((seg) => [...seg]) };
+    const copy = cloneSnake(snake);
     slithering = [...slithering, copy];
 
     const [dr, dc] = dirToVec(snake.direction);
@@ -239,7 +109,7 @@
 
         newSegments = newSegments.filter(
           ([r, c]) =>
-            r >= -1 && r < GRID_SIZE + 1 && c >= -1 && c < GRID_SIZE + 1,
+            r >= -1 && r < board.rows + 1 && c >= -1 && c < board.cols + 1,
         );
 
         if (newSegments.length === 0) {
@@ -255,18 +125,6 @@
         checkWin();
       }
     }, STEP_MS);
-  }
-
-  function handleReset() {
-    initialSnakes = generateSnakes(GRID_SIZE, NUM_SNAKES);
-    reset();
-  }
-
-  function reset() {
-    snakes = cloneSnakes(initialSnakes);
-    slithering = [];
-    blockedIds = new Set();
-    won = false;
   }
 
   // SnakePath helper functions
@@ -342,46 +200,30 @@
   <header>
     <h1>Arrow Escape</h1>
     <p>Click a snake to escape — only if its head's path is clear!</p>
-    <button class="reset-btn" onclick={handleReset}>↺ Reset Map</button>
+    <p class="board-info">{board.shapeName} board · {snakes.length} snakes left</p>
+    <button class="reset-btn" onclick={newGame}>↺ New Board</button>
   </header>
 
   <div class="game-area">
     <div class="board-wrap">
       <svg
-        width={SVG_W}
-        height={SVG_H}
+        width={svgW}
+        height={svgH}
         class="board-svg"
         style="overflow: visible;"
       >
-        <defs>
-          <pattern
-            id="grid-dots"
-            width={CELL}
-            height={CELL}
-            patternUnits="userSpaceOnUse"
-          >
-            <circle
-              cx={CELL / 2}
-              cy={CELL / 2}
-              r="3"
-              fill="var(--text-color)"
-              opacity="0.1"
-            />
-          </pattern>
-        </defs>
+        <path d={boardPath} class="board-rim" />
+        <path d={boardPath} class="board-base" />
 
-        <rect width={SVG_W} height={SVG_H} rx="24" fill="var(--board-bg)" />
-        <rect width={SVG_W} height={SVG_H} rx="24" fill="url(#grid-dots)" />
-
-        <rect
-          width={SVG_W}
-          height={SVG_H}
-          rx="24"
-          fill="none"
-          stroke="var(--text-color)"
-          stroke-width="4"
-          opacity="0.15"
-        />
+        {#each board.cells as [r, c]}
+          <circle
+            cx={c * CELL + CELL / 2}
+            cy={r * CELL + CELL / 2}
+            r="3"
+            fill="var(--text-color)"
+            opacity="0.1"
+          />
+        {/each}
 
         {#each slithering as s (s.id)}
           {#if s.segments.length > 0}
@@ -399,7 +241,7 @@
           <div class="win-modal">
             <div class="win-emoji">🎉</div>
             <h2>Board Cleared!</h2>
-            <button class="play-again-btn" onclick={handleReset}>Play Again</button>
+            <button class="play-again-btn" onclick={newGame}>Next Board ➜</button>
           </div>
         </div>
       {/if}
@@ -441,6 +283,12 @@
     margin: 0;
   }
 
+  .board-info {
+    font-size: 0.92rem;
+    font-weight: 700;
+    opacity: 0.85;
+  }
+
   .reset-btn {
     margin-top: 0.5rem;
     background: var(--btn-bg);
@@ -478,11 +326,27 @@
   .board-wrap {
     position: relative;
     display: inline-block;
+    padding: 16px;
   }
 
   .board-svg {
     display: block;
     filter: drop-shadow(0 12px 36px var(--tile-shadow));
+  }
+
+  .board-rim {
+    fill: var(--board-bg);
+    stroke: var(--text-color);
+    stroke-opacity: 0.15;
+    stroke-width: 28;
+    stroke-linejoin: round;
+  }
+
+  .board-base {
+    fill: var(--board-bg);
+    stroke: var(--board-bg);
+    stroke-width: 20;
+    stroke-linejoin: round;
   }
 
   .win-overlay {
