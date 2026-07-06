@@ -176,19 +176,20 @@ header p {
   margin-top: 1.5rem;
   font-size: 0.88rem;
   line-height: 1.45;
-  opacity: 0.65;
+  color: var(--text-muted);
+  opacity: 0.8;
   transition: opacity 0.2s;
 }
 
 .game-footer:hover {
-  opacity: 0.95;
+  opacity: 1;
 }
 
 .game-footer a {
-  color: var(--text);
+  color: var(--text-color);
   font-weight: 700;
   text-decoration: none;
-  border-bottom: 1px dashed var(--text);
+  border-bottom: 1px dashed var(--text-color);
   transition: color 0.2s, border-color 0.2s;
 }
 

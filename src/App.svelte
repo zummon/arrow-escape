@@ -247,6 +247,16 @@
       {/if}
     </div>
   </div>
+
+  <footer class="game-footer">
+    <p>
+      Made by Ai,
+      <a class="underline" target="_blank" rel="noopener" href="https://github.com/zummon"
+        >Teerapat Anantarattanachai</a
+      >
+    </p>
+    <p class="footer-note">Something breaks, needs upgrade. Let me know</p>
+  </footer>
 </main>
 
 <style>
@@ -409,6 +419,17 @@
   .play-again-btn:active {
     transform: translateY(3px);
     box-shadow: 0 2px 0 var(--text-color);
+  }
+
+  .game-footer p {
+    font-size: 0.88rem;
+    color: inherit;
+  }
+
+  .game-footer .footer-note {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    margin-top: 0.25rem;
   }
 
   .snake-group {
