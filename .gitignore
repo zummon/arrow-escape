@@ -8,6 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+# build output lives in docs/ and is committed, so GitHub Pages can serve it
 dist
 dist-ssr
 *.local
