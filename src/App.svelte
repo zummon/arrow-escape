@@ -199,7 +199,10 @@
 <main class="app-container">
   <header>
     <h1>Arrow Escape</h1>
-    <p>Click a snake to escape — only if its head's path is clear!</p>
+    <p>Tap. Slide. Escape. A tiny grid puzzle where every arrow wants out.</p>
+    <p class="how-to">
+      How to play: Tap any arrow to move it forward — free them all to clear the level.
+    </p>
     <p class="board-info">{board.shapeName} board · {snakes.length} snakes left</p>
     <button class="reset-btn" onclick={newGame}>↺ New Board</button>
   </header>
@@ -293,8 +296,12 @@
     margin: 0;
   }
 
+  .how-to {
+    font-size: 1rem;
+  }
+
   .board-info {
-    font-size: 0.92rem;
+    font-size: 1rem;
     font-weight: 700;
     opacity: 0.85;
   }
@@ -422,13 +429,12 @@
   }
 
   .game-footer p {
-    font-size: 0.88rem;
+    font-size: 1rem;
     color: inherit;
+    max-width: none;
   }
 
   .game-footer .footer-note {
-    font-size: 0.8rem;
-    opacity: 0.8;
     margin-top: 0.25rem;
   }
 
