@@ -91,33 +91,6 @@ header p {
   max-width: 340px;
 }
 
-.reset-btn {
-  margin-top: 0.25rem;
-  background: transparent;
-  border: 2px solid var(--text);
-  color: var(--text);
-  padding: 0.45rem 1.3rem;
-  border-radius: 99px;
-  font-size: 0.95rem;
-  font-weight: 700;
-  opacity: 0.6;
-  transition: opacity 0.2s, background 0.2s;
-}
-
-.reset-btn:hover {
-  opacity: 1;
-  background: rgba(128, 80, 40, 0.08);
-}
-
-/* =============================================
-   Phaser canvas container
-   ============================================= */
-#game-container canvas {
-  display: block;
-  border-radius: 14px;
-  box-shadow: 0 10px 40px var(--shadow);
-}
-
 /* =============================================
    Win overlay
    ============================================= */
