@@ -199,10 +199,6 @@
 <main class="app-container">
   <header>
     <h1>Arrow Escape</h1>
-    <p>Tap. Slide. Escape. A tiny grid puzzle where every arrow wants out.</p>
-    <p class="how-to">
-      How to play: Tap any arrow to move it forward — free them all to clear the level.
-    </p>
     <p class="board-info">{board.shapeName} board · {snakes.length} snakes left</p>
     <button class="reset-btn" onclick={newGame}>↺ New Board</button>
   </header>
@@ -296,10 +292,6 @@
     margin: 0;
   }
 
-  .how-to {
-    font-size: 1rem;
-  }
-
   .board-info {
     font-size: 1rem;
     font-weight: 700;
@@ -332,6 +324,24 @@
   .reset-btn:active {
     transform: translateY(2px);
     box-shadow: 0 2px 0 var(--text-color);
+  }
+
+  /* Keep the light theme's peach-and-chocolate look in dark mode too */
+  @media (prefers-color-scheme: dark) {
+    .reset-btn {
+      background: #ffb5a7;
+      color: #5c3d2e;
+      box-shadow: 0 4px 0 #5c3d2e;
+    }
+
+    .reset-btn:hover {
+      background: #fcd5ce;
+      box-shadow: 0 6px 0 #5c3d2e;
+    }
+
+    .reset-btn:active {
+      box-shadow: 0 2px 0 #5c3d2e;
+    }
   }
 
   .game-area {
